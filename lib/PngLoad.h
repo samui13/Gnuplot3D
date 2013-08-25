@@ -1,31 +1,29 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/19 03:07:18 by samui>
+// Last-Updated : <2013/08/25 23:47:12 by samui>
 
 #ifndef __PNG_LOADER__
 #define __PNG_LOADER__
-#include <OpenGL/gl.h>
-#include <GLUT/glut.h>
-
-typedef unsigned char ubyte_t;
-class PngLoad{
+#include "png.h"
+class PngLoader{
 private:
   unsigned int id;
   unsigned int width,height;
-  ubyte_t *raw_data;
-  int depth,color_type,interlace_type;
+  int bpp;
+  unsigned char *raw_data;
+  unsigned int tex_name;
   char filename[256];
-  void init();
 public:
-  PngLoad();
-  PngLoad(const char *file,unsigned int ID);
-  ~PngLoad();
-  
-  ubyte_t* rawData();
+  PngLoader(char *file,int ID);
+  void PngLoad();
+  ~PngLoader();
   unsigned int getID();
   unsigned int getWidth();
   unsigned int getHeight();
-
+  unsigned char *getRawdata();
+  
+  unsigned int* setTexname();
+  unsigned int getTexname();
 };
- 
+
 
 #endif
