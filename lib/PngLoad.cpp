@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 02:44:18 by samui>
+// Last-Updated : <2013/08/30 03:06:51 by samui>
 
 #include <iostream>
 #include "./PngLoad.h"
@@ -56,6 +56,11 @@ void PngLoader::PngLoad(){
       if(raw_data[j*width*4+(i*4)+0] == 255 && raw_data[j*width*4+(i*4)+1] == 255 && raw_data[j*width*4+(i*4)+2] == 255){
 	raw_data[j*width*4+(i*4)+3] = 0;
       }
+      
+      if(raw_data[j*width*4+(i*4)+0] == 0 && raw_data[j*width*4+(i*4)+1] == 0 && raw_data[j*width*4+(i*4)+2] == 0){
+	raw_data[j*width*4+(i*4)+3] = 0;
+      }
+      
       /*
       if(i%4 == 0)
 	raw_data[j*width*4+i] = 0;

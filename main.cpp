@@ -1,11 +1,12 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 02:46:00 by samui>
+// Last-Updated : <2013/08/30 03:17:30 by samui>
 
 #include <iostream>
 #include <cstdio>
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 #include <iostream>
+#include "process.h"
 #include "lib/pngload.h"
 #include "lib/texmanage.h"
 
@@ -28,17 +29,17 @@ static void display (){
   
   glScalef(2.0,2.0,2.0);
   glTranslatef(0.0,0.0,-15.0);
-  glRotatef(30.0,0.0,1.0,0.0);
+  glRotatef(80.0,0.0,1.0,0.0);
   
-  for(i = 0; i < 25; i++){
+  for(i = 0; i < 50; i++){
     test = pngs.getPng(i);  
     glPushMatrix();
       glTranslatef(0.0,0.0,i*0.02);
       glBindTexture(GL_TEXTURE_2D,test->getTexname());
       glScalef(test->getRateX(),1.0,1.0);
-      for(j = 0; j < 10; j++){
+      for(j = 0; j < 20; j++){
+	glTranslatef(0.0,0.0,0.001);
 	glPushMatrix();
-	glTranslatef(0.0,0.0,0.1);
           glCallList(rectlist);
 	glPopMatrix();
       }
