@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/29 23:35:31 by samui>
+// Last-Updated : <2013/08/30 02:26:02 by samui>
 
 #include <iostream>
 #include <cstdio>
@@ -19,11 +19,16 @@ void TexManage::addPng(char *file){
   glGenTextures(1, png_load->setTexname());
   glBindTexture(GL_TEXTURE_2D, png_load->getTexname());
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  /*
+    //拡大対策
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP );
+  glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP );
+  */
   glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, png_load->getWidth(), png_load->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)png_load->getRawdata());
-  
+  //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, png_load->getWidth(), png_load->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)png_load->getRawdata());
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, png_load->getWidth(), png_load->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)png_load->getRawdata());
   /*
   
 

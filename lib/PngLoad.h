@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/25 23:47:12 by samui>
+// Last-Updated : <2013/08/30 00:40:25 by samui>
 
 #ifndef __PNG_LOADER__
 #define __PNG_LOADER__
@@ -19,6 +19,8 @@ public:
   unsigned int getID();
   unsigned int getWidth();
   unsigned int getHeight();
+  double getRateX();
+  double getRateY();
   unsigned char *getRawdata();
   
   unsigned int* setTexname();

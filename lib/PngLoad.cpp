@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/25 23:46:54 by samui>
+// Last-Updated : <2013/08/30 02:44:18 by samui>
 
 #include <iostream>
 #include "./PngLoad.h"
@@ -39,25 +39,48 @@ void PngLoader::PngLoad(){
   png_init_io(png_sp,fp);
   png_read_png(png_sp,png_ip,PNG_TRANSFORM_EXPAND,NULL);
  
-  png_byte** row_pointers = png_get_rows (png_sp,png_ip);
+  png_byte** raw_pointers = png_get_rows (png_sp,png_ip);
   width = 640;
   height = 480;
-  bpp = 3;
+  bpp = 4;
 
   raw_data = new unsigned char[width*height*bpp];
-  /*
+  
   for(j = 0; j < height; j++){
     for(i = 0; i < width; i++){
-      raw_data[j*height+i][0] = row_pointers[j*height+i][0];
-      raw_data[j*height+i][1] = row_pointers[j*height+i][1];
-      raw_data[j*height+i][2] = row_pointers[j*height+i][2];
+      //テクスチャにAlpha値を入れる場合
+      raw_data[j*width*4+(i*4)+0] = raw_pointers[height-j-1][i*3];
+      raw_data[j*width*4+(i*4)+1] = raw_pointers[height-j-1][i*3+1];
+      raw_data[j*width*4+(i*4)+2] = raw_pointers[height-j-1][i*3+2];
+      raw_data[j*width*4+(i*4)+3] = 255;
+      if(raw_data[j*width*4+(i*4)+0] == 255 && raw_data[j*width*4+(i*4)+1] == 255 && raw_data[j*width*4+(i*4)+2] == 255){
+	raw_data[j*width*4+(i*4)+3] = 0;
+      }
+      /*
+      if(i%4 == 0)
+	raw_data[j*width*4+i] = 0;
+      else if(i%4 == 1)
+	raw_data[j*width*4+i] = 255;
+      else if(i%4  == 2)
+	raw_data[j*width*4+i] = 0;
+      else
+	raw_data[j*width*4+i] = 128.0; //これより低い値では表示しない
+      */
     }
   }
-*/
+
+  /*
+    Alpha値がない場合はこれでいい
+  for(j = 0; j < height; j++){
+    for(i = 0; i < width*3; i++){
+      raw_data[j*width*3+i] = raw_pointers[height-j-1][i];
+    }
+  }
 
   for(i = 0; i < height; i++){
-    memcpy(raw_data+(i*width*bpp),row_pointers[height-i-1],width*bpp);
+    memcpy(raw_data+(i*width*bpp),raw_pointers[height-i-1],width*bpp);
   }
+  */
 
   fclose(fp);
   png_destroy_read_struct(&png_sp,&png_ip,NULL);
@@ -74,4 +97,10 @@ unsigned int PngLoader::getWidth(){
 }
 unsigned int PngLoader::getHeight(){
   return height;
+}
+double PngLoader::getRateX(){
+  return (double)width/(double)height;
+}
+double PngLoader::getRateY(){
+  return (double)height/(double)width;
 }
