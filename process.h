@@ -1,16 +1,18 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 03:47:11 by samui>
+// Last-Updated : <2013/08/30 05:50:12 by samui>
 #ifndef __PROCESS__
 #define __PROCESS__
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
 #include "lib/pngload.h"
 #include "lib/texmanage.h"
+#include "src/view.h"
 
 class ProcessGL{
 private:
   GLuint rectlists;
   TexManage *img;
+  
 public:
   ProcessGL();
 private:
@@ -18,8 +20,11 @@ private:
 public:
   static void display();
   static void timer();
+  static void DragFunc(int x,int y);
+  static void MouseFunc(int button,int stat, int x, int y);
   static void reshape(int width,int height);
-  static void spkey(int key,int x,int y);
+  static void keyfunc(unsigned char key,int x,int y);
+  static void keyspecial(int key,int x,int y);
   static void idle();
 public:
   void Init();
@@ -28,8 +33,9 @@ private:
 };
 
 ProcessGL p;
-
+View views;
 ProcessGL::ProcessGL(){
+  
 }
 
 void ProcessGL::Init(){
@@ -41,12 +47,14 @@ void ProcessGL::Init(){
     sprintf(file, "./data/split-data1/png/data%d.png",i);
     img->addPng(file);
   }
+  views.setN(50);
+    
 }
 void ProcessGL::Display(){
   PngLoader *test;
   int i,j;
 
-  for(i = 0; i < 50; i++){
+  for(i = 0; i < views.getVC(); i++){
     test = img->getPng(i);  
     glPushMatrix();
       glTranslatef(0.0,0.0,i*0.02);
@@ -72,9 +80,12 @@ void ProcessGL::display(){
   
   glPushMatrix();
   
-  glScalef(2.0,2.0,2.0);
   glTranslatef(0.0,0.0,-15.0);
-  glRotatef(80.0,0.0,1.0,0.0);
+  glTranslatef(views.posX,views.posY,views.posZ);
+  glRotatef(views.rotX, 1.0, 0.0, 0.0);
+  glRotatef(views.rotY, 0.0, 1.0, 0.0);
+  glScalef(views.scale*1.0,views.scale*1.0,views.scale);
+  //glRotatef(80.0,0.0,1.0,0.0);
   
   p.Display();
   glPopMatrix();
@@ -98,8 +109,38 @@ void ProcessGL::reshape(int width,int height){
   glMatrixMode(GL_MODELVIEW);
   //glOrtho(-1, 1, -1, 1, -1, 1);
 }
-void ProcessGL::spkey(int key,int x,int y){
-
+void ProcessGL::keyspecial(int key,int x,int y){
+  switch(key){
+  case GLUT_KEY_UP:
+    views.posZ+=0.01;
+    break;
+  case GLUT_KEY_DOWN:
+    views.posZ-=0.01;
+    break;
+  case GLUT_KEY_LEFT:
+    views.posX+=0.01;
+    break;
+  case GLUT_KEY_RIGHT:
+    views.posX-=0.01;
+    break;
+  default:
+    break;
+  }
+}
+void ProcessGL::keyfunc(unsigned char key,int x,int y){
+  switch(key){
+  case 'q':
+    exit(1);
+    break;
+  case 'n':
+    views.setVC(views.getVC()-1);
+    break;
+  case 'm':
+    views.setVC(views.getVC()+1);
+    break;
+  default:
+    break;
+  }
 }
 void ProcessGL::idle(){
   glutPostRedisplay();
@@ -116,6 +157,26 @@ GLuint ProcessGL::InitRect(){
   glEnd();
   glEndList();
   return list;
+}
+void ProcessGL::DragFunc(int x,int y){
+  views.rotX = (float)(y-views.mouseY)+views.fX;
+  views.rotY = (float)(x-views.mouseX)+views.fY;
+  views.rotX=int(views.rotX)%360;
+  views.rotY=int(views.rotY)%360;
+}
+void ProcessGL::MouseFunc(int button,int stat, int x, int y){
+  if(stat == GLUT_DOWN && button == GLUT_LEFT){
+    views.mouseX = x;
+    views.mouseY = y;
+    views.fX = views.rotX;
+    views.fY = views.rotY;
+  }
+  if(stat == GLUT_DOWN && button == GLUT_RIGHT_BUTTON){
+    // Cannot use this
+    views.scale+=0.5;
+    std::cout<<"H"<<std::endl;
+  }
+  
 }
 #endif
 

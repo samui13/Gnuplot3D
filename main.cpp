@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 03:45:35 by samui>
+// Last-Updated : <2013/08/30 05:21:39 by samui>
 
 #include <iostream>
 #include <cstdio>
@@ -19,7 +19,10 @@ int main(int argc, char **argv){
 
   glutDisplayFunc(p.display);
   glutReshapeFunc(p.reshape);
+  glutKeyboardFunc(p.keyfunc);
+  glutSpecialFunc(p.keyspecial);
   glutIdleFunc(p.idle);
+  glutMotionFunc(p.DragFunc);
   
   glDisable(GL_DEPTH_BUFFER_BIT);
   glEnable(GL_TEXTURE_2D);
