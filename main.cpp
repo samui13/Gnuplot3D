@@ -1,60 +1,99 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/19 03:33:00 by samui>
+// Last-Updated : <2013/08/29 23:36:49 by samui>
+
 #include <iostream>
 #include <cstdio>
 #include <OpenGL/gl.h>
 #include <GLUT/glut.h>
-#include "png.h"
-#include "./lib/PngLoad.h"
+#include <iostream>
+#include "lib/pngload.h"
+#include "lib/texmanage.h"
+
 using namespace std;
-#define WIDTH 640
-#define HEIGHT 480
-PngLoad *test;
-GLuint texName[1];
+PngLoader *p;
+TexManage pngs(2);
 
-void display(void)
-{
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-  glRotatef(45.0, 0.0, 1.0, 0.0);
-  glBindTexture(GL_TEXTURE_2D, (*test).getID());
-  glBegin(GL_QUADS);
-  //glColor3f(1.0, 0.0, 0.0);
-  glTexCoord2f(1.0, 1.0);
-  glVertex3f(1.0,1.0,0.0);
+static void display (){
+  PngLoader *test;
+  test = pngs.getPng(0);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glTexCoord2f(-1.0, 1.0);
-  glVertex3f(-1.0,1.0,0.0);
+  glMatrixMode   (GL_MODELVIEW);
+  glLoadIdentity ();
 
-  glTexCoord2f(-1.0, -1.0);
-  glVertex3f(-1.0,-1.0,0.0);
+  glBindTexture   (GL_TEXTURE_2D, test->getTexname());
 
-  glTexCoord2f(1.0, -1.0);
-  glVertex3f(1.0,-1.0,0.0);
-  glEnd();
-  glutSwapBuffers();
+  glBegin       (GL_TRIANGLE_STRIP);
+  glColor4f     (1,1,1,1);
+    
+  glTexCoord2f  (1,0);
+  glVertex3f    (1,0,0);
+
+  glTexCoord2f  (1,1);
+  glVertex3f    (1,1,0);
+
+  glTexCoord2f  (0,0);
+  glVertex3f    (0,0,0);
+
+  glTexCoord2f  (0,1);
+  glVertex3f    (0,1,0);
+
+  glEnd         ();
+
+  glutSwapBuffers ();
 }
 
-int main(int argc, char *argv[])
-{
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA);
-  glutCreateWindow(argv[0]);
-  glutDisplayFunc(display);
+static void reshape (int width, int height){
+  glViewport     (0,0, width, height);
+  glMatrixMode   (GL_PROJECTION);
+  glLoadIdentity ();
+  glOrtho        (0, 1, 0, 1, -1, 1);
+}
+
+static void idle (){
+  glutPostRedisplay();
+}
 
 
-  //init Display
-  glClearColor(1.0, 1.0, 1.0, 1.0);
-  /*
-  glEnable(GL_TEXTURE_2D);
-  glAlphaFunc(GL_GEQUAL,0.5);
-  glEnable(GL_ALPHA_TEST);
-  */
-
+int main(int argc, char **argv){
   char file[256];
-  sprintf(file,"./data/split-data1/png/data25.png");
-  glGenTextures(1,texName);
-  test = new PngLoad(file,0);
+  sprintf(file, "./data/split-data1/png/data25.png");
+
+  p = new PngLoader(file,0);
+  p->PngLoad();
   
+  //p = pngs.getPng(0);
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  glutInitWindowSize(512, 512);
+  glutCreateWindow("MyOpenGL");
+  glutDisplayFunc(display);
+  glutReshapeFunc(reshape);
+  glutIdleFunc(idle);
+
+  
+  
+  glDisable(GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_TEXTURE_2D);
+  
+  glClearColor (0,0,0,1);
+  sprintf(file, "./data/split-data1/png/data25.png");
+  pngs.addPng(file);
+  sprintf(file, "./data/split-data1/png/data30.png");
+  pngs.addPng(file);
+
+  /*
+  glGenTextures(1, p->setTexname());
+  glBindTexture(GL_TEXTURE_2D, p->getTexname());
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p->getWidth(), p->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)p->getRawdata());
+  */
+  
+
   glutMainLoop();
+
   return 0;
 }
