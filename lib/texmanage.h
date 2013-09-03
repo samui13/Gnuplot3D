@@ -13,6 +13,8 @@ private:
 public:
   TexManage(int n);
   void addPng(char *file);
+  void registPng(PngLoader *png_obj);
+  void ChangeMode(int mode,int n);
   PngLoader* getPng(int id);
 };
 

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 00:40:25 by samui>
+// Last-Updated : <2013/09/03 09:03:31 by samui>
 
 #ifndef __PNG_LOADER__
 #define __PNG_LOADER__
@@ -15,6 +15,7 @@ private:
 public:
   PngLoader(char *file,int ID);
   void PngLoad();
+  void PngReload(int mode);
   ~PngLoader();
   unsigned int getID();
   unsigned int getWidth();

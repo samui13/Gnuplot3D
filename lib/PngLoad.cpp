@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 03:06:51 by samui>
+// Last-Updated : <2013/09/03 09:05:58 by samui>
 
 #include <iostream>
 #include "./PngLoad.h"
@@ -89,6 +89,26 @@ void PngLoader::PngLoad(){
 
   fclose(fp);
   png_destroy_read_struct(&png_sp,&png_ip,NULL);
+}
+
+void PngLoader::PngReload(int mode){
+  int i,j;
+  int average;
+  for(j = 0; j < height; j++){
+    for(i = 0; i < width; i++){
+      average = (raw_data[j*width*4+(i*4)+0]+raw_data[j*width*4+(i*4)+1]+raw_data[j*width*4+(i*4)+2])/3;
+      if(mode == 1 && average > raw_data[j*width*4+(i*4)+0]){
+	raw_data[j*width*4+(i*4)+3] = 0;
+      }
+      if(mode == 2 && average > raw_data[j*width*4+(i*4)+1]){
+	raw_data[j*width*4+(i*4)+3] = 0;
+      }
+      if(mode == 3 && average > raw_data[j*width*4+(i*4)+2]){
+	raw_data[j*width*4+(i*4)+3] = 0;
+      }
+    }
+
+  }
 }
 
 PngLoader::~PngLoader(){
