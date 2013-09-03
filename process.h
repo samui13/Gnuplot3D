@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/08/30 06:07:50 by samui>
+// Last-Updated : <2013/09/03 09:40:33 by samui>
 #ifndef __PROCESS__
 #define __PROCESS__
 #include <OpenGL/gl.h>
@@ -47,9 +47,10 @@ void ProcessGL::Init(){
   for(i = 0; i < 50; i++){
     sprintf(file, "./data/split-data1/png/data%d.png",i);
     img->addPng(file);
+    //img->ChangeMode(3,i);
   }
   views.setN(50);
-    
+
 }
 void ProcessGL::Display(){
   PngLoader *test;
