@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/09/03 09:40:33 by samui>
+// Last-Updated : <2013/09/03 10:18:57 by samui>
 #ifndef __PROCESS__
 #define __PROCESS__
 #include <OpenGL/gl.h>
@@ -17,6 +17,12 @@ public:
   ProcessGL();
 private:
   void Display();
+  void ChangeColor(int mode){
+    int i;
+    for(i = 0; i < img->getN();i++){
+      img->ChangeMode(mode,i);
+    }
+  }
 public:
   static void display();
   static void timer();
@@ -78,6 +84,7 @@ void ProcessGL::display(){
 
   glAlphaFunc(GL_GEQUAL,0.5);
   glEnable(GL_ALPHA_TEST);
+  glEnable(GL_DEPTH_TEST); //両面表示
 
   
   glPushMatrix();
@@ -93,7 +100,7 @@ void ProcessGL::display(){
   glPopMatrix();
   glDisable(GL_ALPHA_TEST);
   glDisable(GL_TEXTURE_2D);
-  
+  glDisable(GL_DEPTH_TEST);
   glutSwapBuffers();
   
 }
@@ -130,7 +137,20 @@ void ProcessGL::keyspecial(int key,int x,int y){
   }
 }
 void ProcessGL::keyfunc(unsigned char key,int x,int y){
+  int i;
   switch(key){
+  case 'r':
+    p.ChangeColor(3);
+    break;
+  case 'g':
+    p.ChangeColor(2);
+    break;
+  case 'b':
+    p.ChangeColor(1);
+    break;
+  case 'a':
+    p.ChangeColor(0);
+    break;
   case 'q':
     exit(1);
     break;

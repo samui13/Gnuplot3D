@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// Last-Updated : <2013/09/03 09:21:24 by samui>
+// Last-Updated : <2013/09/03 10:11:38 by samui>
 
 #include <iostream>
 #include <cstdio>
@@ -49,3 +49,6 @@ PngLoader* TexManage::getPng(int id){
   return list[id];
 }
 
+int TexManage::getN(){
+  return N;
+}

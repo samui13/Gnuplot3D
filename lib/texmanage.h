@@ -16,6 +16,7 @@ public:
   void registPng(PngLoader *png_obj);
   void ChangeMode(int mode,int n);
   PngLoader* getPng(int id);
+  int getN();
 };
 
 #endif
